@@ -3,6 +3,7 @@ services:
     name: nomaya
     runtime: python
     plan: free
+    rootDir: nomaya
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: nomaya.settings
