@@ -19,3 +19,7 @@ services:
       python manage.py collectstatic --noinput
     startCommand: gunicorn nomaya.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --graceful-timeout 30
     healthCheckPath: /healthz/
+
+databases:
+  - name: nomaya-db
+    plan: free
