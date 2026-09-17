@@ -1,0 +1,703 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  .nomaya-pay-page {
+    min-height: 92vh;
+    background:
+      radial-gradient(circle at top left, rgba(37,99,235,.28), transparent 34%),
+      radial-gradient(circle at bottom right, rgba(6,182,212,.24), transparent 36%),
+      linear-gradient(135deg, #07111f, #0f172a);
+    display: flex;
+    align-items: center;
+    padding: 70px 0;
+  }
+
+  .nomaya-pay-card {
+    background: rgba(255,255,255,.96);
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 32px;
+    box-shadow: 0 35px 100px rgba(0,0,0,.32);
+    overflow: hidden;
+    color: #111827;
+  }
+
+  .nomaya-pay-top {
+    background:
+      linear-gradient(135deg, rgba(37,99,235,.12), rgba(6,182,212,.12));
+    padding: 34px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .nomaya-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 14px;
+  }
+
+  .summary-box {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 22px;
+    padding: 22px;
+  }
+
+  .summary-row {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .summary-row:last-child {
+    border-bottom: 0;
+  }
+
+  .summary-icon {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border-radius: 14px;
+    background: #eff6ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  .feature-box {
+    background: linear-gradient(135deg, #eff6ff, #ecfeff);
+    border: 1px solid #dbeafe;
+    border-radius: 24px;
+    padding: 24px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: #374151;
+  }
+
+  .feature-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .total-box {
+    background: #0f172a;
+    color: #fff;
+    border-radius: 26px;
+    padding: 26px;
+  }
+
+  .pay-btn {
+    border: 0;
+    border-radius: 999px;
+    padding: 17px 36px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    color: #fff;
+    box-shadow: 0 20px 48px rgba(37,99,235,.36);
+    transition: .2s ease;
+  }
+
+  .pay-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 25px 56px rgba(37,99,235,.46);
+    color: #fff;
+  }
+
+  .soft-note {
+    color: #6b7280;
+  }
+
+  .experience-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .experience-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 12px 34px rgba(15,23,42,.07);
+  }
+
+  .experience-card .experience-icon { font-size: 28px; }
+  .experience-card h3 { font-size: 16px; margin: 10px 0 7px; }
+  .experience-card p { color: #64748b; font-size: 14px; margin: 0; line-height: 1.55; }
+
+  .miles-box {
+    background: linear-gradient(135deg, #312e81, #2563eb 55%, #0891b2);
+    color: #fff;
+    border-radius: 26px;
+    padding: 26px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .miles-number { font-size: clamp(38px, 7vw, 64px); font-weight: 900; line-height: 1; }
+  .miles-formula { color: rgba(255,255,255,.78); }
+
+  .example-tour {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 18px 20px;
+    border: 1px solid #dbeafe;
+    border-radius: 18px;
+    color: inherit;
+    text-decoration: none;
+    background: linear-gradient(135deg, #f8fafc, #eff6ff);
+    transition: .2s ease;
+  }
+
+  .example-tour:hover { transform: translateY(-2px); border-color: #60a5fa; color: inherit; }
+
+  .coming-soon {
+    border: 1px dashed #93c5fd;
+    background: #eff6ff;
+    border-radius: 18px;
+    padding: 18px;
+    color: #1e3a8a;
+  }
+
+  .human-support {
+    background:
+      radial-gradient(circle at top right, rgba(34,197,94,.28), transparent 36%),
+      linear-gradient(135deg, #052e2b, #064e3b);
+    color: #fff;
+    border-radius: 26px;
+    padding: 28px;
+  }
+  .support-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.12);
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .support-dot { width: 9px; height: 9px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 6px rgba(74,222,128,.15); }
+  .support-points { display: grid; gap: 10px; margin-top: 18px; color: rgba(255,255,255,.82); }
+
+  .app-download {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 24px;
+    border-radius: 24px;
+    border: 1px solid #dbeafe;
+    background: linear-gradient(135deg, #eff6ff, #ecfeff);
+  }
+  .store-badges { display: flex; flex-wrap: wrap; gap: 10px; flex-shrink: 0; }
+  .store-badge img { width: 154px; height: 48px; display: block; }
+  .store-badge.disabled { opacity: .42; cursor: not-allowed; }
+
+  .payment-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(2,6,23,.82);
+    backdrop-filter: blur(10px);
+  }
+
+  .payment-overlay.is-open { display: flex; }
+  .payment-modal {
+    width: min(720px, 100%);
+    max-height: 94vh;
+    overflow: auto;
+    background: #fff;
+    color: #111827;
+    border-radius: 26px;
+    box-shadow: 0 35px 100px rgba(0,0,0,.45);
+  }
+  .payment-modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 22px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fff;
+    color: #111827;
+  }
+  .payment-modal-head .soft-note { color: #6b7280 !important; }
+  .payment-close {
+    border: 0;
+    background: #f1f5f9;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 24px;
+    line-height: 1;
+  }
+  #payment-element { min-height: 220px; padding: 22px; }
+  .payment-submit-wrap { padding: 0 22px 22px; }
+  .payment-error { color: #b91c1c; font-size: 14px; margin: 0 22px 16px; }
+
+  @media (max-width: 767px) {
+    .experience-grid { grid-template-columns: 1fr; }
+    .nomaya-pay-page { padding: 28px 0; }
+    .nomaya-pay-card { border-radius: 22px; }
+    .example-tour { align-items: flex-start; }
+    .app-download { align-items: flex-start; flex-direction: column; }
+  }
+
+  [data-bs-theme="dark"] .nomaya-pay-card,
+  html.dark .nomaya-pay-card,
+  body.dark .nomaya-pay-card,
+  .dark-mode .nomaya-pay-card,
+  .theme-dark .nomaya-pay-card {
+    background: #111827 !important;
+    border-color: #374151 !important;
+    color: #f9fafb !important;
+  }
+
+  [data-bs-theme="dark"] .nomaya-pay-top,
+  html.dark .nomaya-pay-top,
+  body.dark .nomaya-pay-top,
+  .dark-mode .nomaya-pay-top,
+  .theme-dark .nomaya-pay-top {
+    background: linear-gradient(135deg, rgba(37,99,235,.16), rgba(6,182,212,.12)) !important;
+    border-bottom-color: #374151 !important;
+  }
+
+  [data-bs-theme="dark"] .summary-box,
+  html.dark .summary-box,
+  body.dark .summary-box,
+  .dark-mode .summary-box,
+  .theme-dark .summary-box {
+    background: #1f2937 !important;
+    border-color: #374151 !important;
+  }
+
+  [data-bs-theme="dark"] .summary-row,
+  html.dark .summary-row,
+  body.dark .summary-row,
+  .dark-mode .summary-row,
+  .theme-dark .summary-row {
+    border-bottom-color: #374151 !important;
+  }
+
+  [data-bs-theme="dark"] .feature-box,
+  html.dark .feature-box,
+  body.dark .feature-box,
+  .dark-mode .feature-box,
+  .theme-dark .feature-box {
+    background: #1f2937 !important;
+    border-color: #374151 !important;
+  }
+
+  [data-bs-theme="dark"] .experience-card,
+  html.dark .experience-card,
+  body.dark .experience-card,
+  .dark-mode .experience-card,
+  .theme-dark .experience-card,
+  [data-bs-theme="dark"] .example-tour,
+  html.dark .example-tour,
+  body.dark .example-tour,
+  .dark-mode .example-tour,
+  .theme-dark .example-tour,
+  [data-bs-theme="dark"] .app-download,
+  html.dark .app-download,
+  body.dark .app-download,
+  .dark-mode .app-download,
+  .theme-dark .app-download {
+    background: #172033 !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+    box-shadow: none !important;
+  }
+
+  [data-bs-theme="dark"] .coming-soon,
+  html.dark .coming-soon,
+  body.dark .coming-soon,
+  .dark-mode .coming-soon,
+  .theme-dark .coming-soon {
+    background: #172554 !important;
+    border-color: #3b82f6 !important;
+    color: #dbeafe !important;
+  }
+
+  [data-bs-theme="dark"] .summary-icon,
+  html.dark .summary-icon,
+  body.dark .summary-icon,
+  .dark-mode .summary-icon,
+  .theme-dark .summary-icon {
+    background: #0f172a !important;
+  }
+
+  [data-bs-theme="dark"] .experience-card p,
+  html.dark .experience-card p,
+  body.dark .experience-card p,
+  .dark-mode .experience-card p,
+  .theme-dark .experience-card p {
+    color: #cbd5e1 !important;
+  }
+
+  [data-bs-theme="dark"] .feature-item,
+  html.dark .feature-item,
+  body.dark .feature-item,
+  .dark-mode .feature-item,
+  .theme-dark .feature-item,
+  [data-bs-theme="dark"] .soft-note,
+  html.dark .soft-note,
+  body.dark .soft-note,
+  .dark-mode .soft-note,
+  .theme-dark .soft-note {
+    color: #9ca3af !important;
+  }
+</style>
+
+<main class="nomaya-pay-page">
+  <div class="container">
+    <div class="col-xl-7 col-lg-8 mx-auto">
+
+      <div class="nomaya-pay-card">
+
+        <div class="nomaya-pay-top text-center">
+          <div class="nomaya-badge mb-4">
+            ✨ Kişiye Özel Nomaya Deneyimi
+          </div>
+
+          <h1 class="display-6 fw-bold mb-3">
+            Seyahatinin her adımı sana göre planlansın
+          </h1>
+
+          <p class="lead soft-note mb-0">
+            Maliyet etkin, kaliteli aktiviteleri senin ilgi alanlarına ve seyahat ritmine göre adım adım planlayacağız.
+          </p>
+        </div>
+
+        <div class="p-4 p-md-5">
+
+          {% if obj.is_paid %}
+            <div class="alert alert-success mb-4" role="alert">
+              <strong>Ödemenizi aldık.</strong><br>
+              WhatsApp'tan size ulaşacağız.
+            </div>
+          {% elif payment_result == "success" %}
+            <div class="alert alert-info mb-4" role="alert">
+              Ödemeniz doğrulanıyor. Onaylandığında verdiğiniz WhatsApp numarası üzerinden iletişime geçilecektir.
+            </div>
+          {% elif payment_result == "cancel" %}
+            <div class="alert alert-warning mb-4" role="alert">
+              Ödeme tamamlanmadı. Bilgilerinizi kaybetmeden yeniden deneyebilirsiniz.
+            </div>
+          {% endif %}
+
+          <div class="summary-box mb-4">
+            <div class="summary-row">
+              <div class="summary-icon">📍</div>
+              <div>
+                <div class="fw-bold">Konum</div>
+                <div class="soft-note">{{ obj.location }}</div>
+              </div>
+            </div>
+
+            <div class="summary-row">
+              <div class="summary-icon">📅</div>
+              <div>
+                <div class="fw-bold">Tarih</div>
+                <div class="soft-note">{{ formatted_dates }} • {{ obj.days }} gün</div>
+              </div>
+            </div>
+
+            <div class="summary-row">
+              <div class="summary-icon">🎯</div>
+              <div>
+                <div class="fw-bold">Seyahat Tarzı</div>
+                <div class="soft-note">{{ obj.travel_style }}</div>
+              </div>
+            </div>
+
+            <div class="summary-row">
+              <div class="summary-icon">📱</div>
+              <div>
+                <div class="fw-bold">İletişim</div>
+                <div class="soft-note">{{ obj.email }} • {{ obj.phone }}</div>
+              </div>
+            </div>
+
+            {% if obj.notes %}
+              <div class="summary-row">
+                <div class="summary-icon">📝</div>
+                <div>
+                  <div class="fw-bold">Notların</div>
+                  <div class="soft-note">{{ obj.notes }}</div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="experience-grid mb-4">
+            <div class="experience-card">
+              <div class="experience-icon">🧭</div>
+              <h3>Sana özel günlük plan</h3>
+              <p>Her gün için kaliteli, maliyet etkin ve gerçekten yapmak isteyeceğin aktiviteler seçilir.</p>
+            </div>
+            <div class="experience-card">
+              <div class="experience-icon">🎧</div>
+              <h3>Canlı sesli hikâyeler</h3>
+              <p>Nomaya uygulamasıyla gezerken bulunduğun yerlerin hikâyelerini tam zamanında dinlersin.</p>
+            </div>
+            <div class="experience-card">
+              <div class="experience-icon">💬</div>
+              <h3>WhatsApp asistanı</h3>
+              <p>Seyahat öncesinde ve yolculuk boyunca ihtiyacın olduğunda gerçek destek yanında olur.</p>
+            </div>
+          </div>
+
+          <div class="human-support mb-4">
+            <div class="support-status"><span class="support-dot"></span> 7/24 canlı insan desteği</div>
+            <h2 class="h3 fw-bold mt-3 mb-2">Seyahat boyunca yalnız değilsin</h2>
+            <p class="mb-0 text-white-50">
+              Sana atanan gerçek WhatsApp asistanı seyahatin boyunca yanında olur. Acil bir durumda,
+              izninle anlık konumunu görür ve ihtiyacın olan desteği organize eder.
+            </p>
+            <div class="support-points">
+              <div>📍 Kayboldun veya acil desteğe mi ihtiyacın var? Konumuna göre hızla yardım sağlarız.</div>
+              <div>🚗 Yolda mı kaldın? Uygun yerel ulaşım veya araç desteği organize ederiz.</div>
+              <div>💬 Planın mı değişti? Günlük rotanı anında yeniden düzenleriz.</div>
+            </div>
+          </div>
+
+          <div class="app-download mb-4">
+            <div>
+              <div class="nomaya-badge mb-2">📲 Nomaya Asistan</div>
+              <h2 class="h4 fw-bold mb-2">Uygulamayı indir, seyahatin cebinde olsun</h2>
+              <p class="soft-note mb-0">Canlı sesli hikâyeleri dinle, aktivitelerini tamamla ve Nomaya Millerini kazan.</p>
+            </div>
+            <div class="store-badges">
+              <a class="store-badge" href="https://apps.apple.com/tr/app/nomaya-asistan/id6782041383" target="_blank" rel="noopener" aria-label="Nomaya Asistan'ı App Store'dan indir">
+                <img src="{% static 'assets/images/element/app-store.svg' %}" alt="App Store'dan indirin">
+              </a>
+              <span class="store-badge disabled" title="Google Play sürümü çok yakında" aria-label="Google Play sürümü çok yakında">
+                <img src="{% static 'assets/images/element/google-play.svg' %}" alt="Google Play çok yakında">
+              </span>
+            </div>
+          </div>
+
+          <div class="feature-box mb-4">
+            <h5 class="fw-bold mb-3">Ödeme sonrasında seni neler bekliyor?</h5>
+
+            <div class="feature-item">✅ <span>Sana özel oluşturulmuş rota ve günlük akış</span></div>
+            <div class="feature-item">✅ <span>Adım adım gezilecek yerler ve durak önerileri</span></div>
+            <div class="feature-item">✅ <span>Sesli Nomaya rehberliği ile kulaklığından yönlendirme</span></div>
+            <div class="feature-item">✅ <span>Yerel ipuçları, sürpriz noktalar ve kişisel öneriler</span></div>
+            <div class="feature-item">✅ <span>Mobil uygulama üzerinden tam Nomaya deneyimi</span></div>
+          </div>
+
+          <div class="miles-box mb-4 text-center">
+            <div class="small text-uppercase fw-bold mb-2">Bu seyahatte tahmini kazanacağın</div>
+            <div class="miles-number">{{ estimated_miles }} mil</div>
+            <div class="miles-formula mt-3">
+              Yaklaşık {{ estimated_activities }} aktivite: {{ obj.days }} gün × günde ortalama 4 aktivite × 200 mil
+              <br>Aktiviteleri tamamladıkça kazandığın milleri ileride Nomaya'da kullanabilirsin.
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h5 class="fw-bold mb-2">Nomaya ile hazırlanmış örnek bir seyahati incele</h5>
+            <p class="soft-note">Uygulama deneyiminin rota, aktivite ve hikâye akışını bu iki bölümlük Vietnam seyahatinde görebilirsin.</p>
+            <div class="d-grid gap-2">
+              <a class="example-tour" href="/tours/erdi-bey-aile-turu-vietnam-1/" target="_blank" rel="noopener">
+                <span><strong>🇻🇳 Erdi Bey Aile Turu — Vietnam</strong><br><small class="soft-note">Seyahatin birinci bölümünü incele</small></span>
+                <span>↗</span>
+              </a>
+              <a class="example-tour" href="/tours/erdi-bey-aile-turu-vietnam-2/" target="_blank" rel="noopener">
+                <span><strong>🇻🇳 Erdi Bey Aile Turu — Devamı</strong><br><small class="soft-note">Seyahatin ikinci bölümünü incele</small></span>
+                <span>↗</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="coming-soon mb-4">
+            <strong>✈️ Çok yakında:</strong> Uçak bileti ve otel satın alma özelliği de Nomaya deneyimine ekleniyor.
+          </div>
+
+          <div class="total-box text-center mb-4">
+            <div class="small text-white-50 mb-2">Toplam Tutar</div>
+            <div class="display-4 fw-bold mb-2">
+              ${{ obj.total_price }} USD
+            </div>
+            <div class="text-white-50">${{ obj.price_per_day }} × {{ obj.days }} gün</div>
+          </div>
+
+          {% if not obj.is_paid %}
+            <form method="post" action="{% url 'order_customized_pay' obj.public_id %}" class="d-grid" id="embeddedPaymentForm">
+              {% csrf_token %}
+              <button type="submit" class="btn pay-btn btn-lg">
+                Güvenli Ödeme Penceresini Aç →
+              </button>
+            </form>
+          {% endif %}
+
+          <p class="small soft-note text-center mt-4 mb-0">
+            Ödeme bu sayfadan ayrılmadan Stripe'ın güvenli ödeme penceresinde tamamlanır.
+            Ödeme sonrası verdiğiniz WhatsApp numarasından size ulaşacağız.
+          </p>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+{% if not obj.is_paid %}
+  <div class="payment-overlay" id="paymentOverlay" aria-hidden="true">
+    <div class="payment-modal" role="dialog" aria-modal="true" aria-labelledby="paymentTitle">
+      <div class="payment-modal-head">
+        <div>
+          <strong id="paymentTitle">Güvenli Ödeme</strong>
+          <div class="small soft-note">Stripe tarafından korunur • ${{ obj.total_price }} USD</div>
+        </div>
+        <button class="payment-close" type="button" id="closePayment" aria-label="Ödeme penceresini kapat">×</button>
+      </div>
+      <div id="payment-element"></div>
+      <div class="payment-error d-none" id="paymentError" role="alert"></div>
+      <div class="payment-submit-wrap d-grid">
+        <button class="btn pay-btn" type="button" id="confirmPayment">
+          ${{ obj.total_price }} USD Öde
+        </button>
+      </div>
+    </div>
+  </div>
+  {{ stripe_publishable_key|json_script:"stripePublishableKey" }}
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    (() => {
+      const form = document.getElementById("embeddedPaymentForm");
+      const overlay = document.getElementById("paymentOverlay");
+      const closeButton = document.getElementById("closePayment");
+      const confirmButton = document.getElementById("confirmPayment");
+      const paymentError = document.getElementById("paymentError");
+      const payButton = form && form.querySelector("button[type='submit']");
+      const publishableKey = JSON.parse(document.getElementById("stripePublishableKey").textContent);
+      let stripe = null;
+      let elements = null;
+
+      if (!form) return;
+
+      const closeModal = () => {
+        overlay.classList.remove("is-open");
+        overlay.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      };
+
+      const showPaymentError = (message) => {
+        paymentError.textContent = message;
+        paymentError.classList.remove("d-none");
+      };
+
+      closeButton.addEventListener("click", closeModal);
+      overlay.addEventListener("click", (event) => {
+        if (event.target === overlay) closeModal();
+      });
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!publishableKey) {
+          alert("Stripe yayınlanabilir anahtarı henüz tanımlanmamış.");
+          return;
+        }
+
+        payButton.disabled = true;
+        payButton.textContent = "Güvenli ödeme hazırlanıyor...";
+        overlay.classList.add("is-open");
+        overlay.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+
+        try {
+          if (!elements) {
+            const response = await fetch(form.action, {
+              method: "POST",
+              body: new FormData(form),
+              headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+            const data = await response.json();
+            if (!response.ok || !data.client_secret) {
+              throw new Error(data.error || "Ödeme penceresi hazırlanamadı.");
+            }
+
+            stripe = Stripe(publishableKey, { locale: "tr" });
+            elements = stripe.elements({
+              clientSecret: data.client_secret,
+              appearance: {
+                theme: "stripe",
+                variables: {
+                  colorPrimary: "#2563eb",
+                  colorBackground: "#ffffff",
+                  colorText: "#30313d",
+                  colorDanger: "#df1b41",
+                  borderRadius: "12px",
+                  fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+                }
+              }
+            });
+            const paymentElement = elements.create("payment", { layout: "tabs" });
+            paymentElement.mount("#payment-element");
+          }
+        } catch (error) {
+          closeModal();
+          alert(error.message || "Ödeme penceresi hazırlanamadı.");
+        } finally {
+          payButton.disabled = false;
+          payButton.textContent = "Güvenli Ödeme Penceresini Aç →";
+        }
+      });
+
+      confirmButton.addEventListener("click", async () => {
+        if (!stripe || !elements) return;
+        confirmButton.disabled = true;
+        confirmButton.textContent = "Ödeme işleniyor...";
+        paymentError.classList.add("d-none");
+
+        const returnUrl = new URL(window.location.href);
+        returnUrl.search = "";
+        returnUrl.searchParams.set("payment", "success");
+
+        const result = await stripe.confirmPayment({
+          elements,
+          confirmParams: { return_url: returnUrl.toString() },
+          redirect: "if_required"
+        });
+
+        if (result.error) {
+          showPaymentError(result.error.message || "Ödeme tamamlanamadı.");
+          confirmButton.disabled = false;
+          confirmButton.textContent = "${{ obj.total_price }} USD Öde";
+          return;
+        }
+
+        if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
+          returnUrl.searchParams.set("payment_intent", result.paymentIntent.id);
+          window.location.assign(returnUrl.toString());
+        }
+      });
+    })();
+  </script>
+{% endif %}
+
+{% endblock %}
