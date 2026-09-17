@@ -101,6 +101,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Use WhiteNoise’s compressed manifest storage (better than Django’s default)
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+WHITENOISE_MANIFEST_STRICT = False
 
 # --- Media (persistent) ---
 MEDIA_URL = "/media/"
